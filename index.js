@@ -27,8 +27,8 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-const app = require('./app');
-const sequelize = require('./config/database');
+const app = require('./src/app');
+const sequelize = require('./src/config/database');
 
 app.use(cors);
 
@@ -36,10 +36,10 @@ app.use(cors);
 const PORT = process.env.PORT || 4000;
 
 // Charge les modelels de la base de données pour que Sequelize puisse les synchroniser
-require('./models/Image');
-require('./models/User');
-require('./models/TypeRecette');
-require('./models/Recette');
+require('./src/models/Image');
+require('./src/models/User');
+require('./src/models/TypeRecette');
+require('./src/models/Recette');
 
 (async () => {
     try {
