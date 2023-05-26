@@ -30,7 +30,7 @@ if (process.env.NODE_ENV !== 'production') {
 const app = require('./src/app');
 const sequelize = require('./src/config/database');
 
-app.use(cors);
+app.use(cors());
 
 // Défini le port où le serveur écoutera les requêtes entrantes
 const PORT = process.env.PORT || 4000;
