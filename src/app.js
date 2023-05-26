@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+const cors = require('cors');
 
 const usersRoute = require('./routes/usersRoutes');
 const recetteRoute = require('./routes/recettesRoutes')
@@ -17,6 +18,11 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
 });
+
+app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:8080'
+  }));
 
 //pour gérer les erreurs
 const notFoundErrorHandler = require('./middlewares/errors-handlers/notFoundErrorHandler');

@@ -1,5 +1,4 @@
 const http = require('http');
-const cors = require('cors');
 const WebSocket = require('ws').Server;
 
 /*const wss = new WebSocket.Server({ port: 8080 });
@@ -30,11 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
 const app = require('./src/app');
 const sequelize = require('./src/config/database');
 
-app.use(cors());
 
-app.use(cors({
-    origin: 'http://localhost:8080'
-  }));
 
 // Défini le port où le serveur écoutera les requêtes entrantes
 const PORT = process.env.PORT || 4000;
