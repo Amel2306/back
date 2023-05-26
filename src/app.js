@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 
 app.use(cors());
 app.use(cors({
-    origin: 'http://localhost:8080'
+    origin: 'https://papaya-speculoos-1d07fa.netlify.app'
   }));
 
 //pour gérer les erreurs
