@@ -1,5 +1,5 @@
 const http = require('http');
-const cors = require("cors");
+const cors = require('cors');
 const WebSocket = require('ws').Server;
 
 /*const wss = new WebSocket.Server({ port: 8080 });
