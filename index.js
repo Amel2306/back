@@ -32,6 +32,10 @@ const sequelize = require('./src/config/database');
 
 app.use(cors());
 
+app.use(cors({
+    origin: 'http://localhost:8080'
+  }));
+
 // Défini le port où le serveur écoutera les requêtes entrantes
 const PORT = process.env.PORT || 4000;
 
