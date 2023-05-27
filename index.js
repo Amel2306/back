@@ -37,12 +37,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(cors());
+/*app.use(cors());
 app.use(cors({
     origin: 'https://cookolisto.netlify.app',
     optionsSuccessStatus: 200 // Permettre les réponses avec le code de statut 200
 }));
-
+*/
 // Défini le port où le serveur écoutera les requêtes entrantes
 const PORT = process.env.PORT || 4000;
 
