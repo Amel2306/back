@@ -19,7 +19,7 @@ app.use((req, res, next) => {
     next();
 });
 
-//app.use(cors());
+app.use(cors());
 app.use(cors({
     origin: 'https://cookolisto.netlify.app',
     optionsSuccessStatus: 200 // Permettre les réponses avec le code de statut 200
