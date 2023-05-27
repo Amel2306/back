@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const Ingredient = require('./Ingredient');
 const Recette = require('./Recette');
-
+ 
 const IngredientRecette = sequelize.define('ingredient_recette', {
   quantite: {
     type: DataTypes.INTEGER,
