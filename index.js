@@ -1,4 +1,5 @@
 const http = require('http');
+const cors = require('cors');
 /*const WebSocket = require('ws').Server;*/
 
 /*const wss = new WebSocket.Server({ port: 8080 });
@@ -29,7 +30,18 @@ if (process.env.NODE_ENV !== 'production') {
 const app = require('./src/app');
 const sequelize = require('./src/config/database');
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    next();
+});
 
+app.use(cors());
+app.use(cors({
+    origin: 'https://cookolisto.netlify.app',
+    optionsSuccessStatus: 200 // Permettre les réponses avec le code de statut 200
+}));
 
 // Défini le port où le serveur écoutera les requêtes entrantes
 const PORT = process.env.PORT || 4000;
