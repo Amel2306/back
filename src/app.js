@@ -19,10 +19,11 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(cors());
+//app.use(cors());
 app.use(cors({
-    origin: ' http://localhost:8080'
-  }));
+    origin: ' http://localhost:8080',
+    optionsSuccessStatus: 200 // Permettre les réponses avec le code de statut 200
+}));
 
 //pour gérer les erreurs
 const notFoundErrorHandler = require('./middlewares/errors-handlers/notFoundErrorHandler');
