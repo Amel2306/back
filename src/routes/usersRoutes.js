@@ -15,6 +15,6 @@ router.get('/:id/panier', authMidlle.auth,PanierController.getAllRecettesPanier)
 router.post('/:id/panier', authMidlle.auth, PanierController.ajouterRecetteAuPanier);
 router.put('/:id/panier', authMidlle.auth, PanierController.supprimerRecetteDuPanier);
 router.get('/:id/panier/tri', authMidlle.auth,PanierController.getAllRecettesPanierTri);
-router.get("/:id/panier/ingredients", PanierController.getMesIngredientsPanier);
+router.get("/:id/panier/ingredients",authMidlle.auth, PanierController.getMesIngredientsPanier);
 module.exports = router;
 
