@@ -1,6 +1,6 @@
 const http = require('http');
-const cors = require('cors');
-/*const WebSocket = require('ws').Server;*/
+const cors = require("cors");
+const WebSocket = require('ws').Server;
 
 /*const wss = new WebSocket.Server({ port: 8080 });
 
@@ -27,29 +27,19 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-const app = require('./src/app');
-const sequelize = require('./src/config/database');
+const app = require('./app');
+const sequelize = require('./config/database');
 
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    next();
-});
+app.use(cors);
 
-app.use(cors());
-app.use(cors({
-    origin: 'http://localhost:8080',
-    optionsSuccessStatus: 200 // Permettre les réponses avec le code de statut 200
-}));
 // Défini le port où le serveur écoutera les requêtes entrantes
 const PORT = process.env.PORT || 4000;
 
 // Charge les modelels de la base de données pour que Sequelize puisse les synchroniser
-require('./src/models/Image');
-require('./src/models/User');
-require('./src/models/TypeRecette');
-require('./src/models/Recette');
+require('./models/Image');
+require('./models/User');
+require('./models/TypeRecette');
+require('./models/Recette');
 
 (async () => {
     try {

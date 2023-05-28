@@ -1,4 +1,5 @@
 const TypeRecettes = require("../models/TypeRecette");
+const Recette = require ("../models/Recette")
 
 exports.getAllTypeRecettes = async (req, res) =>{
     const type_recettes = await TypeRecettes.findAll();
@@ -57,3 +58,32 @@ exports.deleteTypeRecette = async (req,res) => {
     }
 
 };
+
+exports.getRecetteCategorie = async (req, res) => {
+    const categorie = req.params.categorie;
+  
+    try {
+      // Recherchez l'ID du type de recette correspondant à la catégorie donnée
+      const typeRecette = await TypeRecettes.findOne({
+        where: {
+          nom: categorie
+        }
+      });
+  
+      if (!typeRecette) {
+        return res.status(404).json({ message: 'Catégorie introuvable' });
+      }
+  
+      // Récupérez toutes les recettes avec la catégorie correspondante
+      const recettes = await Recette.findAll({
+        where: {
+          categorie: typeRecette.id
+        }
+      });
+  
+      res.json(recettes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Erreur serveur' });
+    }
+  };

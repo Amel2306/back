@@ -4,6 +4,7 @@ const User = require("../models/User");
 const {where} = require("sequelize");
 const IngredientRecette = require("../models/recetteIngredients");
 const Ingredient = require("../models/Ingredient");
+const TypeIngredient = require("../models/TypeIngredient");
 
 
 // Récupérer toutes les recettes dans le panier
@@ -122,27 +123,56 @@ exports.getAllRecettesPanierTri = async (req, res, next) => {
     }
 };
 
-// Contrôleur pour récupérer les ingrédients du panier avec leur quantité
-exports.getIngredientsFromPanier = async (req, res) => {
+exports.getMesIngredientsPanier = async (req, res) => {
     const userId = req.params.id; // Récupérer l'ID de l'utilisateur depuis les paramètres de la requête
 
     try {
-        // Requête de jointure pour récupérer les ingrédients du panier avec leur quantité
-        const ingredients = await IngredientRecette.findAll({
-            where: { userId },
-            include: [{ model: Ingredient }]
+      // Récupérer les recettes associées au panier pour l'utilisateur donné
+      const panier = await Panier.findAll({
+        where: { userId },
+      });
+  
+      const ingredientsWithQuantities = {};
+  
+      // Parcourir les recettes et récupérer les ingrédients associés avec leurs quantités
+      for (const item of panier) {
+        const recette = item.recetteId;
+  
+        // Récupérer les ingrédients associés à la recette avec les quantités
+        const ingredientsRecette = await IngredientRecette.findAll({
+          where: { recetteId: recette },
         });
+  
+        // Ajouter les ingrédients avec leurs quantités au tableau résultant
+        for (const ingredientRecette of ingredientsRecette) {
+          const ingredient = ingredientRecette.ingredientId;
+          const quantite = ingredientRecette.quantite;
+          const uniteQte = ingredientRecette.uniteQte;
+            const ingredientComplet = await Ingredient.findOne({
+                where: {id: ingredient}
+            })
+            
+            const categorie = ingredientComplet.tingredient;
+            const categorieComplete = await TypeIngredient.findOne( {
+                where: {id: categorie}
+            })
+            if (!ingredientsWithQuantities.hasOwnProperty(categorie)) {
+                ingredientsWithQuantities[categorie] = [];
+              }
 
-        // Mapper les résultats pour obtenir un tableau avec les noms des ingrédients et leurs quantités
-        const ingredientsWithQuantities = ingredients.map(item => ({
-            nom: item.Ingredient.nom,
-            quantite: item.quantite,
-            uniteQte: item.uniteQte
-        }));
-
-        res.json(ingredientsWithQuantities);
+          ingredientsWithQuantities[categorie].push({
+            categorie: categorieComplete.nom,
+            nom: ingredientComplet.nom,
+            quantite: quantite * item.quantite, // Multiplier par la quantité du panier
+            uniteQte,
+          });
+        }
+      }
+  
+      res.json(ingredientsWithQuantities);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Une erreur s\'est produite lors de la récupération des ingrédients du panier.' });
+      console.error(error);
+      res.status(500).json({ message: 'Une erreur s\'est produite lors de la récupération des ingrédients du panier.' });
     }
-};
+  };
+  
