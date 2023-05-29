@@ -1,34 +1,6 @@
 const User = require('../models/User')
 const jwt = require("jsonwebtoken");
-
-/*function extractUserId(req) {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        return null;
-    }
-    const token = authHeader.split(" ")[1];
-    if (!token) {
-        return null;
-    }
-    try {
-        const secretKey = "ceci_est_une_clée_secrette";
-        const decodedToken = jwt.verify(token, secretKey);
-        return decodedToken.userId;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-}
-
-exports.getUserByToken = async (req, res) => {
-    const userId = extractUserId(req);
-    if (userId) {
-        const user = await User.findByPk(userId);
-        res.send(user);
-    } else {
-        res.status(401).send({ error: "Unauthorized" });
-    }
-};*/
+const bcrypt = require('bcrypt');
 
 exports.getAllUsers = async (req, res) => {
     const users = await User.findAll();
@@ -46,22 +18,30 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.createUser = async (req, res) => {
-    const { nom, prenom, email,mdp } = req.body;
-
+    const { nom, prenom, email, mdp } = req.body;
+  
     try {
-        const newUser = await User.create({ nom, prenom, email,mdp });
-        res.status(201).json(newUser);
+      const hashedPassword = await bcrypt.hash(mdp, 10); // Génère le hachage du mot de passe avec un coût de 10
+      const newUser = await User.create({ nom, prenom, email, mdp: hashedPassword });
+      res.status(201).json(newUser);
     } catch (error) {
-        res.status(400).json({ message: 'Error creating user', error });
+      res.status(400).json({ message: 'Error creating user', error });
     }
-};
+  };
 
 exports.updateUser = async (req, res) => {
     const { nom, prenom, email,mdp } = req.body;
     const userId = req.params.id;
 
     try {
-        const [updatedRows] = await User.update({ nom, prenom, email, mdp }, { where: { id: userId } });
+        let hashedPassword = null;
+        //let updateFields = { nom, prenom, email };
+        if (mdp) {
+            hashedPassword = await bcrypt.hash(mdp, 10);
+          //updateFields.mdp = hashedPassword;
+        }
+    
+        const [updatedRows] = await User.update({ nom, prenom, email, mdp: hashedPassword }, { where: { id: userId } });
 
         if (updatedRows > 0) {
             res.status(200).json({ message: 'user updated successfully' });
