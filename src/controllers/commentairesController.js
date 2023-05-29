@@ -16,8 +16,21 @@ exports.getCommentairesByRecette = async (req, res) => {
     const recetteId = req.params.id;
 
     try {
+        const comNom = [];
         const commentaires = await Commentaire.findAll({ where: { recetteId } });
-        res.status(200).json(commentaires);
+        for (const item of commentaires ) {
+            const user = await User.findOne({
+                where: {id : item.userId}
+            })
+
+            comNom.push ({
+                nomUser: user.nom,
+                prenomUser: user.prenom,
+                contenu: item.contenu,
+                note: item.note
+            })
+        }
+        res.status(200).json(comNom);
     } catch (error) {
         res.status(500).json({ message: 'Une erreur s\'est produite lors de la récupération des commentaires de la recette.', error });
     }
