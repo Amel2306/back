@@ -18,6 +18,7 @@ router.get('/:id/ingredients', recetteIngredientController.getIngredientsByRecet
 router.get('/:id/commentaire', commentairesController.getCommentairesByRecette);
 router.post('/:id/commentaire', auth.auth, commentairesController.addCommentaire);
 router.put('/:commentaireId/commentaire', auth.auth, commentairesController.updateCommentaire);
+router.get('/typeingredient/:catIngredient', recetteController.getRecettesByTypeIngredients)
 router.delete('/:commentaireId/commentaire', auth.auth, commentairesController.deleteCommentaire);
 
 module.exports = router;

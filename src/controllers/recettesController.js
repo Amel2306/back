@@ -1,5 +1,8 @@
 const Recette = require('../models/Recette')
 const Image = require('../models/Image')
+const TypeIgredients = require('../models/TypeIngredient');
+const Ingredient = require ("../models/Ingredient")
+const RecetteIngredients = require ("../models/recetteIngredients")
 
 exports.getAllRecettes = async (req,res) => {
     const recettes = await Recette.findAll();
@@ -101,5 +104,45 @@ exports.getImageRec = async (req, res) => {
         res.json(image);
     } catch (error) {
         res.json(error);
+    }
+};
+
+exports.getRecettesByTypeIngredients = async (req, res) => {
+    const categorie = req.params.catIngredient;
+
+    const recettesCat = new Set();
+
+    try {
+        const typeIngredient = await TypeIgredients.findOne({
+            where: {
+                nom: categorie
+            }
+        });
+
+        if (typeIngredient) {
+            const ingredients = await Ingredient.findAll({
+                where: {
+                    tingredient: typeIngredient.id
+                }
+            });
+
+            for (const ingredient of ingredients) {
+                const recettes = await RecetteIngredients.findAll({
+                    where: {
+                        ingredientId: ingredient.id
+                    }
+                });
+
+                for (const recette of recettes) {
+                    recettesCat.add(recette.recetteId);
+                }
+            }
+
+            res.json(Array.from(recettesCat)); // Convertit le Set en Array avant de l'envoyer en réponse JSON
+        } else {
+            res.status(404).json({ message: 'Type d\'ingrédient non trouvé' });
+        }
+    } catch (err) {
+        res.status(500).json({ message: 'Erreur lors de la récupération des recettes par type d\'ingrédient', error: err });
     }
 };
