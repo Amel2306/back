@@ -133,8 +133,13 @@ exports.getRecettesByTypeIngredients = async (req, res) => {
                     }
                 });
 
-                for (const recette of recettes) {
-                    recettesCat.add(recette.recetteId);
+                for (const recetteId of recettes) {
+                    const recette = await Recette.findOne ({
+                        where: {
+                            id: recetteId.recetteId
+                        }
+                    })
+                    recettesCat.add(recette);
                 }
             }
 

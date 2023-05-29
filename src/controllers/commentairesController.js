@@ -24,6 +24,7 @@ exports.getCommentairesByRecette = async (req, res) => {
             })
 
             comNom.push ({
+                id: item.id,
                 userId: user.id,
                 nomUser: user.nom,
                 prenomUser: user.prenom,
