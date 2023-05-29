@@ -133,17 +133,20 @@ exports.getRecettesByTypeIngredients = async (req, res) => {
                     }
                 });
 
-                for (const recetteId of recettes) {
-                    const recette = await Recette.findOne ({
-                        where: {
-                            id: recetteId.recetteId
-                        }
-                    })
-                    recettesCat.add(recette);
+                for (const recIng of recettes) {
+                    recettesCat.add(recIng.recetteId);
                 }
             }
 
-            res.json(Array.from(recettesCat)); // Convertit le Set en Array avant de l'envoyer en réponse JSON
+            const recettesArray = Array.from(recettesCat);
+
+            const recettes = await Recette.findAll({
+                where: {
+                    id: recettesArray
+                }
+            });
+
+            res.json(recettes);
         } else {
             res.status(404).json({ message: 'Type d\'ingrédient non trouvé' });
         }
